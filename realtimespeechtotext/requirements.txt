@@ -1,0 +1,4 @@
+argparse>=1.4.0
+sounddevice>=0.4.4
+vosk>=0.3.7
+flask>=2.1.3

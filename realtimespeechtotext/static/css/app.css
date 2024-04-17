@@ -1,0 +1,17 @@
+.border-md-right {
+    border-right: 1px solid #87c9f8;
+    padding-right: 12px;
+}
+
+.form-row.required .form-label:after {
+    content:"*";
+    color:red;
+}
+
+.card {
+    width: 15rem;
+}
+
+.card-header, .card-text {
+    text-align: center;
+}

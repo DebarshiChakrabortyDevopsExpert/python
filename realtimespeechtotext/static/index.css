@@ -1,0 +1,34 @@
+h2, p, input {
+    font-family: 'Lato', sans-serif;
+}
+
+input, label {
+    color: white;
+}
+
+body {
+    background-image: url("./images/speech.jpg");
+    background-size: 100%;
+}
+
+.hero {
+    color: white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align:center;
+}
+
+.speechTranscriptContainer {
+    margin-top: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 2px solid whitesmoke;
+    background-color: white;
+    text-align: left;
+    font-size: large;
+    font-style: oblique;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}

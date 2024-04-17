@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Recognition</title>
+    <link href="{{ url_for('static', filename='css/bootstrap-4.5.2.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/waitMe.css') }}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+
+<body>
+    <nav class="navbar navbar-light">
+        <a class="navbar-brand" href="/">
+            <img src="{{ url_for('static', filename='images/acc_logo.png') }}" width="30" alt="" class="d-inline-block align-middle mr-2 border-md-right">
+            <img src="{{ url_for('static', filename='images/home.png') }}" width="30" alt="" class="d-inline-block align-middle ml-2">
+        </a>
+    </nav>
+    <div class="hero">
+        <h2>Speech Recognition</h2>
+        <!-- <p>
+            An online speech to text assistance that can help you transcript any documents, books, reports, blog posts live.
+        </p> -->
+    </div>
+    <hr>
+    <div class="speechText">
+        <form method="post" class="speechform" enctype="multipart/form-data"
+            style="margin: auto; width: 500px; text-align: left">
+
+            <div class='form-group'>
+                <Label>Press start and ait for confirmation to begin live Speech to text streaming </Label>
+            </div>
+
+            <input type="submit" id="generatetext" name="generatetext" class="btn btn-primary" value="Start Transcript Generation" onclick="listen()" />
+        </form>
+    </div>
+    {% if transcript -%}
+    <div class="speechTranscriptContainer">
+        <h3>Transcript:</h3>
+        <p>
+            <q>{{ transcript }}</q>
+        </p>
+    </div>
+    {% endif -%}
+
+    <script>
+        function listen(){
+            navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+                if (!MediaRecorder.isTypeSupported('audio/webm'))
+                    return alert('Browser not supported')
+
+                const mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm',
+                })
+
+                const socket = new WebSocket('ws://localhost:5001/listen')
+
+                socket.onopen = () => {
+                    document.querySelector('#status').textContent = 'Connected'
+                    mediaRecorder.addEventListener('dataavailable', async (event) => {
+                        if (event.data.size > 0 && socket.readyState == 1) {
+                            socket.send(event.data)
+                        }
+                    })
+                    mediaRecorder.start(250)
+                }
+
+                socket.onmessage = (message) => {
+                    const received = message.data
+                    if (received) {
+                        document.querySelector('.speechTranscriptContainer').textContent += ' ' + message.data
+                    }
+                }
+            })
+        }
+    </script>
+
+</body>
+
+</html>
